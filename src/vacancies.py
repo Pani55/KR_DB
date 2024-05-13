@@ -19,7 +19,7 @@ class Vacancy:
                 f'{self.requirements}, {self.url}, {self.city}')
 
     @classmethod
-    def cost_to_object_list(cls, hh_vacancies):
+    def cost_to_vacancies_obj_list(cls, hh_vacancies):
         """
         Классовый метод для создания экзэмпляров класса и укладки их в список.
 

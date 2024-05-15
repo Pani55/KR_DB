@@ -28,3 +28,7 @@ class Company:
             companies_list.append(company_obj)
 
         return companies_list
+
+    def to_list(self):
+        return [self.employer_id, self.accredited, self.name, self.description, self.url,
+                self.vacancies_url, self.area]

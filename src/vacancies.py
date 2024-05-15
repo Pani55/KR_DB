@@ -45,6 +45,10 @@ class Vacancy:
 
         return vacancies_list
 
+    def to_list(self):
+        return [self.name, self.salary_from, self.salary_to, self.currency,
+                self.requirements, self.url, self.city]
+
     @staticmethod
     def validate_data_int(value):
         """

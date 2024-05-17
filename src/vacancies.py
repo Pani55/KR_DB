@@ -4,11 +4,12 @@ class Vacancy:
 
     """
 
-    def __init__(self, name: str, salary_from: int, salary_to: int,
+    def __init__(self, name: str, salary_from: int, salary_to: int, employer_id: str,
                  currency: str, requirements: str, url: str, city: str):
         self.name = name
         self.salary_from = salary_from
         self.salary_to = salary_to
+        self.employer_id = employer_id
         self.currency = currency
         self.requirements = requirements
         self.url = url
@@ -37,17 +38,29 @@ class Vacancy:
                 salary_from = Vacancy.validate_data_int(vacancy.get('salary').get('from'))
                 salary_to = Vacancy.validate_data_int(vacancy.get('salary').get('to'))
                 currency = vacancy['salary']['currency']
+            employer_id = Vacancy.validate_data_str(vacancy['employer']['id'])
             requirements = vacancy['snippet']['requirement']
             url = vacancy['alternate_url']
             city = vacancy['area']['name']
-            vacancy_object = cls(name, salary_from, salary_to, currency, requirements, url, city)
+            vacancy_object = cls(name, salary_from, salary_to, employer_id,
+                                 currency, requirements, url, city)
             vacancies_list.append(vacancy_object)
 
         return vacancies_list
 
     def to_list(self):
-        return [self.name, self.salary_from, self.salary_to, self.currency,
-                self.requirements, self.url, self.city]
+        return [self.name, self.salary_from, self.salary_to, self.employer_id,
+                self.currency, self.requirements, self.url, self.city]
+
+    @staticmethod
+    def validate_data_str(value):
+        """
+        Валидатор стороковых значений
+
+        """
+        if value:
+            return value
+        return 'информация не была найдена'
 
     @staticmethod
     def validate_data_int(value):

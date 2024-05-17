@@ -54,10 +54,60 @@ class DBManager:
                 with self.conn:
                     self.cur.execute(f""
                                      f"INSERT INTO vacancies (vacancy_name, salary_from, salary_to,"
-                                     f"currency, requirement, url, city) VALUES "
-                                     f"(%s, %s, %s, %s, %s, %s, %s) returning *;", vacancy.to_list())
+                                     f"employer_id, currency, requirement, url, city) VALUES "
+                                     f"(%s, %s, %s, %s, %s, %s, %s, %s) returning *;", vacancy.to_list())
             except psycopg2.errors.UniqueViolation:
                 print(vacancy)
+
+    def get_companies_and_vacancies_count(self):
+        with self.conn:
+            self.cur.execute(f""
+                             f"SELECT employer_name, COUNT(vacancy_id)"
+                             f"FROM employers "
+                             f"JOIN vacancies USING(employer_id) "
+                             f"GROUP BY employer_name;"
+                             f"")
+            return self.cur.fetchall()
+
+    def get_all_vacancies(self):
+        with self.conn:
+            self.cur.execute(f""
+                             f"SELECT vacancy_name, employer_name, salary_from, salary_to, vacancies.url "
+                             f"FROM vacancies "
+                             f"JOIN employers USING(employer_id)"
+                             f"")
+            return self.cur.fetchall()
+
+    def get_avg_salary(self):
+        with self.conn:
+            self.cur.execute(f""
+                             f"SELECT AVG(salary_from + salary_to) AS avg_salary "
+                             f"FROM vacancies"
+                             f"")
+            return self.cur.fetchone()[0]
+
+    def get_vacancies_with_higher_salary(self):
+        with self.conn:
+            self.cur.execute(f""
+                             f"SELECT vacancy_name, city, salary_from, salary_to, vacancies.url "
+                             f"FROM vacancies "
+                             f"WHERE (salary_from + salary_to) / 2 > "
+                             f"(SELECT AVG(salary_from + salary_to) AS avg_salary "
+                             f"FROM vacancies)"
+                             f"")
+            return self.cur.fetchall()
+
+    def get_vacancies_with_keyword(self):
+        user_input = input('Введите ключевое слово: ')
+
+        with self.conn:
+            self.cur.execute(f""
+                             f"SELECT vacancy_name, employer_name, salary_from, salary_to, vacancies.url "
+                             f"FROM vacancies "
+                             f"JOIN employers USING(employer_id) "
+                             f"WHERE vacancy_name LIKE '%{user_input}%'"
+                             f"")
+            return self.cur.fetchall()
 
 
 DE = DBManager()

@@ -12,6 +12,10 @@ class Company:
 
     @classmethod
     def cost_to_companies_obj_list(cls, companies):
+        """
+        Классовый метод для создания экзэмпляров класса и укладки их в список.
+
+        """
         companies_list = []
         for company in companies:
             employer_id = company['id']

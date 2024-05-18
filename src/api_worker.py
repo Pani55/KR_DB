@@ -32,6 +32,7 @@ class HH(Parser):
 
     def load_vacancies(self, keyword: str = '', employer_id=''):
         """
+        Метод для получения вакансий с API HeadHunter
 
         """
         self.url = 'https://api.hh.ru/vacancies'
@@ -49,6 +50,10 @@ class HH(Parser):
         return self.vacancies
 
     def load_companies(self, company_ids: list):
+        """
+        Метод для получения компаний с API HeadHunter
+
+        """
 
         for company_id in company_ids:
             self.url = 'https://api.hh.ru/employers/' + company_id

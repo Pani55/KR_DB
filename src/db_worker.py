@@ -15,6 +15,10 @@ class DBManager:
         self.create_comp_vacan_tables()
 
     def create_comp_vacan_tables(self):
+        """
+        Метод для создания таблиц в базе данных
+
+        """
         with self.conn:
             self.cur.execute(f""
                              f"CREATE TABLE IF NOT EXISTS employers ("
@@ -42,6 +46,10 @@ class DBManager:
                              f");")
 
     def load_data_to_db(self, vacancies, companies):
+        """
+        Метод для заполнения таблиц данными
+
+        """
         for company in companies:
             with self.conn:
                 self.cur.execute(f""
@@ -60,6 +68,10 @@ class DBManager:
                 print(vacancy)
 
     def get_companies_and_vacancies_count(self):
+        """
+        метод для получения списка всех компаний кол-ва их вакансий
+
+        """
         with self.conn:
             self.cur.execute(f""
                              f"SELECT employer_name, COUNT(vacancy_id)"
@@ -70,6 +82,10 @@ class DBManager:
             return self.cur.fetchall()
 
     def get_all_vacancies(self):
+        """
+        Метод для получения списка всех вакансий
+
+        """
         with self.conn:
             self.cur.execute(f""
                              f"SELECT vacancy_name, employer_name, salary_from, salary_to, vacancies.url "
@@ -79,6 +95,10 @@ class DBManager:
             return self.cur.fetchall()
 
     def get_avg_salary(self):
+        """
+        Метод для получения средней заработной платы по вакансиям
+
+        """
         with self.conn:
             self.cur.execute(f""
                              f"SELECT AVG(salary_from + salary_to) AS avg_salary "
@@ -87,6 +107,10 @@ class DBManager:
             return self.cur.fetchone()[0]
 
     def get_vacancies_with_higher_salary(self):
+        """
+        Метод для получения списка вакансий с зп выше средней по всем вакансиям
+
+        """
         with self.conn:
             self.cur.execute(f""
                              f"SELECT vacancy_name, city, salary_from, salary_to, vacancies.url "
@@ -98,6 +122,10 @@ class DBManager:
             return self.cur.fetchall()
 
     def get_vacancies_with_keyword(self):
+        """
+        Метод для получения списка вакансий по ключевому слову
+
+        """
         user_input = input('Введите ключевое слово: ')
 
         with self.conn:
@@ -108,7 +136,3 @@ class DBManager:
                              f"WHERE vacancy_name LIKE '%{user_input}%'"
                              f"")
             return self.cur.fetchall()
-
-
-DE = DBManager()
-DE.create_comp_vacan_tables()
